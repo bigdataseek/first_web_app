@@ -122,12 +122,16 @@ def logout():
     return redirect(url_for("login"))
 
 
-if not is_docker:
-    if __name__ == "__main__":
-        # init_db()  # 애플리케이션 시작 시 데이터베이스 초기화
-        print("개발버전으로 실행됨")
-        app.run(debug=True, port=8000)
-else:
-    with app.app_context():
-        print("app_context is called")
-        init_db()
+with app.app_context():
+    print("app_context is called")
+    init_db()
+
+# if not is_docker:
+#     if __name__ == "__main__":
+#         # init_db()  # 애플리케이션 시작 시 데이터베이스 초기화
+#         print("개발버전으로 실행됨")
+#         app.run(debug=True, port=8000)
+# else:
+#     with app.app_context():
+#         print("app_context is called")
+#         init_db()

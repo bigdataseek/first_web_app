@@ -1,34 +1,34 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Docker 환경 감지
 is_docker = os.path.exists("/.dockerenv")
 
 # 환경에 따른 데이터베이스 호스트 설정
-db_host = "db" if is_docker else "localhost"
+db_host = "db" if is_docker else os.getenv("DB_HOST", "localhost")
 print(f"db_host: {db_host}")
-if db_host == "db":
-    app = Flask(__name__, template_folder="/app/templates", static_folder="/app/static")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db:3306/users"
-else:
-    app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "mysql+pymysql://root:1234@localhost:3306/users"
-    )
 
-app.secret_key = "12345"
+app = Flask(__name__)
 
-# SQLAlchemy 설정
+# 환경 변수에서 데이터베이스 연결 정보 읽기
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_name = os.getenv("DB_NAME")
 
-
+# 데이터베이스 연결 설정
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    f"mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = os.getenv(
+    "FLASK_SECRET_KEY", "12345"
+)  # 환경변수가 없다면 12345로 설정
 
 db = SQLAlchemy(app)
-
-import time
-import pymysql
 
 
 import pymysql
@@ -51,7 +51,7 @@ def wait_for_db(host, port, user, password, db, retries=5, delay=5):
 
 
 def init_db():
-    wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
+    wait_for_db(host=db_host, port=3306, user=db_user, password=db_password, db=db_name)
     # if os.path.exists("/.dockerenv"):  # 도커 환경일 경우
     #     wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
     # else:  # 로컬 환경일 경우

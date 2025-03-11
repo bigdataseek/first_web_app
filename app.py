@@ -49,12 +49,13 @@ def wait_for_db(host, port, user, password, db, retries=5, delay=5):
 
 
 def init_db():
-    if os.path.exists("/.dockerenv"):  # 도커 환경일 경우
-        wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
-    else:  # 로컬 환경일 경우
-        wait_for_db(
-            host="localhost", port=3306, user="root", password="1234", db="users"
-        )
+    wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
+    # if os.path.exists("/.dockerenv"):  # 도커 환경일 경우
+    #     wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
+    # else:  # 로컬 환경일 경우
+    #     wait_for_db(
+    #         host="localhost", port=3306, user="root", password="1234", db="users"
+    #     )
     db.create_all()
 
 

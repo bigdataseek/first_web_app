@@ -15,20 +15,6 @@ services:
     networks:
       - my_network
 
-  db:
-    image: mysql:8.0
-    container_name: mysql_db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - my_network
-
   nginx:
     image: nginx:latest
     container_name: nginx_proxy
@@ -40,9 +26,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - my_network
-
-volumes:
-  mysql_data:
 
 networks:
   my_network:

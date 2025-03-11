@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container, .main-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* 로그인 및 회원가입 폼의 입력 필드 스타일 */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px; /* 패딩 추가 */
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* 내부 패딩과 테두리를 포함한 크기 계산 */
+    font-size: 16px; /* 글꼴 크기 조정 */
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.logout-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.flash-messages li {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.flash-messages li {
+    white-space: pre-line;
+  }

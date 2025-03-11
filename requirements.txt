@@ -3,4 +3,4 @@ Flask-SQLAlchemy
 Flask-Login
 gunicorn
 python-dotenv
-psycopg2
+psycopg2-binary

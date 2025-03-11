@@ -1,17 +1,36 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+import os
 
-app = Flask(__name__, template_folder="/app/templates", static_folder="/app/static")
+
+# Docker 환경 감지
+is_docker = os.path.exists("/.dockerenv")
+
+# 환경에 따른 데이터베이스 호스트 설정
+db_host = "db" if is_docker else "localhost"
+print(f"db_host: {db_host}")
+if db_host == "db":
+    app = Flask(__name__, template_folder="/app/templates", static_folder="/app/static")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db/users"
+else:
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@localhost/users"
+
 app.secret_key = "12345"
 
 # SQLAlchemy 설정
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db/users"
+
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
 import time
 import pymysql
+
+
+import pymysql
+import time
 
 
 def wait_for_db(host, port, user, password, db, retries=5, delay=5):
@@ -24,9 +43,19 @@ def wait_for_db(host, port, user, password, db, retries=5, delay=5):
             print("Database is ready!")
             return
         except pymysql.MySQLError as e:
-            print(f"Waiting for database... (Attempt {i + 1}/{retries})")
+            print(f"Database connection failed (Attempt {i + 1}/{retries}): {e}")
             time.sleep(delay)
     raise Exception("Database connection failed after retries")
+
+
+def init_db():
+    if os.path.exists("/.dockerenv"):  # 도커 환경일 경우
+        wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
+    else:  # 로컬 환경일 경우
+        wait_for_db(
+            host="localhost", port=3306, user="root", password="1234", db="users"
+        )
+    db.create_all()
 
 
 # User 모델 정의
@@ -34,13 +63,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-
-
-# 데이터베이스 초기화 함수
-def init_db():
-    # 데이터베이스 연결 대기
-    wait_for_db(host="db", port=3306, user="root", password="1234", db="users")
-    db.create_all()
 
 
 # 데이터베이스에서 사용자 조회
@@ -58,11 +80,6 @@ def add_user(username, password):
     except:
         db.session.rollback()
         return False
-
-
-with app.app_context():
-    print("app_context is called")
-    init_db()
 
 
 @app.route("/")
@@ -125,27 +142,12 @@ def logout():
     return redirect(url_for("login"))
 
 
-# if __name__ == "__main__":
-#     # init_db()  # 애플리케이션 시작 시 데이터베이스 초기화
-#     app.run(debug=True, port=8000)
-
-# if __name__ == "__main__":
-#     init_db()  # 애플리케이션 시작 시 데이터베이스 초기화
-#     app.run(debug=True)
-
-
-# from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
-
-# app = Flask(__name__)
-
-# # 환경 변수에서 DB URL 가져오기
-# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db/users"
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# db = SQLAlchemy(app)
-
-
-# @app.route("/")
-# def home():
-#     return "Hello, Flask with Docker!"
+if not is_docker:
+    if __name__ == "__main__":
+        # init_db()  # 애플리케이션 시작 시 데이터베이스 초기화
+        print("개발버전으로 실행됨")
+        app.run(debug=True, port=8000)
+else:
+    with app.app_context():
+        print("app_context is called")
+        init_db()

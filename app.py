@@ -16,23 +16,22 @@ app.secret_key = os.getenv(
 db = SQLAlchemy(app)
 
 
-import pymysql
 import time
 
 
-def wait_for_db(host, port, user, password, db, retries=5, delay=5):
-    for i in range(retries):
-        try:
-            conn = pymysql.connect(
-                host=host, port=port, user=user, password=password, db=db
-            )
-            conn.close()
-            print("Database is ready!")
-            return
-        except pymysql.MySQLError as e:
-            print(f"Database connection failed (Attempt {i + 1}/{retries}): {e}")
-            time.sleep(delay)
-    raise Exception("Database connection failed after retries")
+# def wait_for_db(host, port, user, password, db, retries=5, delay=5):
+#     for i in range(retries):
+#         try:
+#             conn = pymysql.connect(
+#                 host=host, port=port, user=user, password=password, db=db
+#             )
+#             conn.close()
+#             print("Database is ready!")
+#             return
+#         except pymysql.MySQLError as e:
+#             print(f"Database connection failed (Attempt {i + 1}/{retries}): {e}")
+#             time.sleep(delay)
+#     raise Exception("Database connection failed after retries")
 
 
 def init_db():

@@ -11,10 +11,12 @@ db_host = "db" if is_docker else "localhost"
 print(f"db_host: {db_host}")
 if db_host == "db":
     app = Flask(__name__, template_folder="/app/templates", static_folder="/app/static")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db/users"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@db:3306/users"
 else:
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:1234@localhost/users"
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "mysql+pymysql://root:1234@localhost:3306/users"
+    )
 
 app.secret_key = "12345"
 

@@ -10,7 +10,7 @@ services:
       - db    
     environment:
       - FLASK_ENV=production
-      - DATABASE_URL=mysql+pymysql://root:1234@localhost/users
+      - DATABASE_URL=mysql+pymysql://root:1234@db/users
     volumes:
       - .:/app  # 개발 시 코드 반영 가능
   

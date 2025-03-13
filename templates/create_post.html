@@ -5,7 +5,15 @@
 
 {% block content %}
     <h1>새 글 작성</h1>
-    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <form method="POST">
         <div class="form-group">
             <label for="username">사용자명:</label>

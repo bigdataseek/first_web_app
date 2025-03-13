@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import psycopg2
 from dotenv import load_dotenv
 import os
+from sqlalchemy.exc import IntegrityError
+
 
 # .env 파일 로드
 load_dotenv()
@@ -13,7 +15,7 @@ database_url = os.getenv("DATABASE_URI")
 
 # Flask 애플리케이션 생성
 app = Flask(__name__)
-
+app.config["SECRET_KEY"] = "your_secret_key"  # 임의의 긴 문자열로 설정
 
 # 데이터베이스 설정
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
@@ -75,7 +77,8 @@ def new_post():
                 db.session.commit()
             except IntegrityError:
                 db.session.rollback()
-                return "이미 존재하는 이메일입니다.", 400
+                flash("이미 존재하는 이메일입니다.", "error")  # 플래시 메시지 설정
+                return redirect(url_for("new_post"))  # 다시 글 작성 페이지로 리다이렉트
 
         post = Post(
             title=request.form["title"], content=request.form["content"], author=user
@@ -93,5 +96,6 @@ if __name__ == "__main__":  # 개발 버전
         db.create_all()  # 데이터베이스 테이블 생성
     app.run(debug=True, port=8000)
 else:  # 배포 버전(gunicorn 실행시 __name__은 app이다. 도커 실행시입니다.)
-    with app.app_context():
-        db.create_all()  # 데이터베이스 테이블 생성
+    # with app.app_context():
+    #     db.create_all()  # 데이터베이스 테이블 생성
+    pass

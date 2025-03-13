@@ -8,7 +8,7 @@ import os
 # .env 파일 로드
 load_dotenv()
 
-database_url = os.getenv("DATABASE_URL")
+database_url = os.getenv("DATABASE_URI")
 
 
 # Flask 애플리케이션 생성
@@ -16,10 +16,8 @@ app = Flask(__name__)
 
 
 # 데이터베이스 설정
-# app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://myuser:mypassword@localhost/mydatabase"
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)

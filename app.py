@@ -93,4 +93,5 @@ if __name__ == "__main__":  # 개발 버전
         db.create_all()  # 데이터베이스 테이블 생성
     app.run(debug=True, port=8000)
 else:  # 배포 버전(gunicorn 실행시 __name__은 app이다. 도커 실행시입니다.)
-    db.create_all()  # 데이터베이스 테이블 생성
+    with app.app_context():
+        db.create_all()  # 데이터베이스 테이블 생성

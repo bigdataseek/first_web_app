@@ -1,0 +1,21 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}- 홈{% endblock %}
+
+{% block content %}
+    <h1>블로그 게시물</h1>
+    
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <small>작성자: <a href="{{ url_for('user_profile', username=post.author.username) }}">{{ post.author.username }}</a> | 작성일: {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>작성된 게시물이 없습니다.</p>
+    {% endif %}
+{% endblock %}
+

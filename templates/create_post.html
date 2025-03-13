@@ -1,0 +1,32 @@
+<!-- templates/create_post.html -->
+{% extends 'base.html' %}
+
+{% block title %}- 새 글 작성{% endblock %}
+
+{% block content %}
+    <h1>새 글 작성</h1>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">사용자명:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">이메일:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="content">내용:</label>
+            <textarea id="content" name="content" rows="6" required></textarea>
+        </div>
+        
+        <button type="submit">게시물 작성</button>
+    </form>
+{% endblock %}

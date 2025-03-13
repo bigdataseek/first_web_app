@@ -1,0 +1,23 @@
+<!-- templates/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}- {{ user.username }}의 프로필{% endblock %}
+
+{% block content %}
+    <h1>{{ user.username }}의 프로필</h1>
+    <p>이메일: {{ user.email }}</p>
+    
+    <h2>작성한 게시물</h2>
+    {% if user.posts %}
+        {% for post in user.posts %}
+            <div class="card">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                <small>작성일: {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>작성한 게시물이 없습니다.</p>
+    {% endif %}
+{% endblock %}
+
